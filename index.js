@@ -1,17 +1,18 @@
-// internal imports
-
 // [COMMON-JS IMPORTS]
+// - Core-Module Imports
 // const fs = require('node:fs');
 // const http = require('node:http');
 // const url = require('node:url');
 
 // [ES6 IMPORTS]
+// - Core-Module Imports
 import fs from 'node:fs';
 import http from 'node:http';
 import url from 'node:url';
+// - Third-Party Imports
+import slugify from 'slugify';
 
-
-// external imports
+// - Our-Own Module Imports
 // const { replaceTemplate } = require('./modules/replaceTemplate');
 import { replaceTemplate } from './modules/replaceTemplate.js';
 
@@ -53,8 +54,13 @@ const templateProduct = fs.readFileSync(`./templates/template-product.html`, 'ut
 
 const data = fs.readFileSync(`./dev-data/data.json`, 'utf-8');
 const dataObject = JSON.parse(data);
-// console.log(dataObject);
 
+// Using Third Party Modules ----
+// const slugs = dataObject.map(element => slugify(element.productName, { lower: true }));
+
+// Using inbuilt methods
+const slugs = dataObject.map(element => element.productName.toLowerCase().split(' ').join('-'));
+console.log(slugs);
 
 // create a server for listening incoming requests using http module
 const server = http.createServer((request, response) => {
@@ -64,7 +70,7 @@ const server = http.createServer((request, response) => {
 
     const { query: { id: productID }, pathname: pathName } = url.parse(request.url, true);
 
-    // MY CODE
+    // TABISH CODE
     // const incomingURL = new URL(request.url, `https://${request.headers.host}`);
     // const pathName = incomingURL.pathname;
     // const productID = incomingURL.searchParams.get('id');
